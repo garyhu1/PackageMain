@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义手风琴</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			ul{
+				list-style: none;
+				overflow: hidden;
+				width: 1300px;
+			}
+			#box{
+				margin-left: 50px;
+				margin-top: 70px;
+				width: 1150px;
+				height: 600px;
+				overflow: hidden;
+				border: 1px solid black;
+			}
+			li{
+				width: 240px;
+				text-align: center;
+				height: 600px;
+				line-height: 600px;
+				float: left;
+			}
+			#li1{
+				background: chartreuse;
+			}
+			#li2{
+				background: yellowgreen;
+			}
+			#li3{
+				background: indigo;
+			}
+			#li4{
+				background: green;
+			}
+			#li5{
+				background: tomato;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<ul>
+				<li id="li1">1</li>
+				<li id="li2">2</li>
+				<li id="li3">3</li>
+				<li id="li4">4</li>
+				<li id="li5">5</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var list = document.querySelectorAll("li");
+		function clear(obj,value){
+			for(var j = 0;j<obj.length;j++){
+				move(obj[j],{width: value});
+			}
+		}
+		for(var i = 0;i < list.length;i++){
+			list[i].onmouseover = function() {
+				clear(list,100);
+				move(this,{width: 800});
+			}
+			
+			list[i].onmouseout = function() {
+				clear(list,240);
+			}
+		}
+		//封装多参数运动函数
+		function move(obj,json,fn){
+			clearInterval(obj.timer);
+			obj.timer = setInterval(function(){
+				var flag = true;
+				for(var attr in json){
+					var current = 0;
+					if(attr == "opacity"){
+						current = Math.round(parseInt(getStyle(obj,attr)*100))||0;
+					}else{
+						current = parseInt(getStyle(obj,attr));
+					}
+					
+					var step = (json[attr]-current)/10;
+					step = step>0?Math.ceil(step):Math.floor(step);
+					
+					if(attr == "opacity"){
+						if("opacity" in obj.style){
+							obj.style.opacity = (current+step)/100;
+						}else{
+							obj.style.filter = "alpha(opacity = "+(current+step)+")";
+						}
+					}else if(attr == "zIndex"){
+						obj.style.zIndex = json[attr];
+					}else{
+						obj.style[attr] = (current+step)+"px";
+					}
+					
+					if(current != json[attr]){
+						flag = false;
+					}
+				}
+				if(flag){
+					clearInterval(obj.timer);
+					if(fn){
+						fn();
+					}
+				}
+			},30);
+		}
+		//获取样式值
+		function getStyle(obj,attr){
+			if(obj.currentStyle){
+				return obj.currentStyle[attr];
+			}else{
+				return window.getComputedStyle(obj,null)[attr];
+			}
+		}
+	</script>
+</html>

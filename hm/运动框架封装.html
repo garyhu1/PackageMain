@@ -45,7 +45,7 @@
 				// console.log(attr);
 				var current = 0;
 				if(attr == "opacity") {
-					current = Math.round(parseInt(getStyle(obj, attr) * 100)) || 0;
+					current = Math.round(parseInt(getStyle(obj, attr) * 100)) || 0;//取整
 					console.log(current);
 				} else {
 					current = parseInt(getStyle(obj, attr)); // 数值
@@ -62,7 +62,7 @@
 						// obj.style.opacity
 						obj.style.opacity = (current + step) / 100;
 					} else { // obj.style.filter = alpha(opacity = 30)
-						obj.style.filter = "alpha(opacity = " + (current + step) * 10 + ")";
+						obj.style.filter = "alpha(opacity = " + (current + step) + ")";
 
 					}
 				} else if(attr == "zIndex") {
